@@ -1,4 +1,4 @@
-# AdsRunner - Taxi Billboard Advertising Platform
+# AdsRunner - Billboard Advertising Platform
 
 A cloud-native SaaS platform for managing, scheduling, and analyzing digital billboard advertisements on public transport vehicles (taxis and buses). Built on **C#/.NET**, **Azure**, and **Flutter** for cross-platform reach, enterprise-grade reliability, and real-time analytics.
 
