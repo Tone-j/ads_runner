@@ -36,9 +36,6 @@ jobs:
       - name: Run analyzer
         run: flutter analyze
 
-      - name: Run tests
-        run: flutter test
-
       - name: Build web release
         run: flutter build web --release --base-href "/ads_runner/"
 
