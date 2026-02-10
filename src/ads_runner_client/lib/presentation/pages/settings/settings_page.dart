@@ -204,7 +204,7 @@ class _SettingsContentState extends State<_SettingsContent> {
                     title: Text('Dark Mode', style: AppTextStyles.bodyMedium),
                     subtitle: Text('Toggle between light and dark theme', style: AppTextStyles.caption),
                     value: themeState.themeMode == ThemeMode.dark,
-                    activeColor: AppColors.primary,
+                    activeTrackColor: AppColors.primary,
                     onChanged: (_) => context.read<ThemeCubit>().toggleTheme(),
                   );
                 },
