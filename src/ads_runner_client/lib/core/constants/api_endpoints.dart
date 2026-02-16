@@ -1,5 +1,7 @@
+import '../config/environment.dart';
+
 class ApiEndpoints {
-  static const String baseUrl = 'https://api.adsrunner.io/v1';
+  static String get baseUrl => EnvironmentConfig.apiBaseUrl;
   static const String login = '/auth/login';
   static const String register = '/auth/register';
   static const String forgotPassword = '/auth/forgot-password';

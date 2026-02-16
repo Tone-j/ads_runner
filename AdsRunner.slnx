@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AdsRunner.Api/AdsRunner.Api.csproj" />
+    <Project Path="src/AdsRunner.Application/AdsRunner.Application.csproj" />
+    <Project Path="src/AdsRunner.Domain/AdsRunner.Domain.csproj" />
+    <Project Path="src/AdsRunner.Infrastructure/AdsRunner.Infrastructure.csproj" />
+  </Folder>
+</Solution>

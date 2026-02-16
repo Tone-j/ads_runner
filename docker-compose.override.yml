@@ -1,0 +1,10 @@
+version: "3.8"
+
+# Development overrides
+# This file is automatically merged with docker-compose.yml in development.
+# Add API service here when containerizing the backend.
+
+services:
+  sqlserver:
+    environment:
+      MSSQL_PID: "Developer"

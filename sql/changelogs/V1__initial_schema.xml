@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- ============================================================ -->
+    <!-- Users Table                                                   -->
+    <!-- ============================================================ -->
+    <changeSet id="1" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="Users"/></not>
+        </preConditions>
+        <createTable tableName="Users">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ExternalId" type="nvarchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Email" type="nvarchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FirstName" type="nvarchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LastName" type="nvarchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Role" type="nvarchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CompanyName" type="nvarchar(200)"/>
+            <column name="AvatarUrl" type="nvarchar(2048)"/>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_Users_Email"/></not>
+        </preConditions>
+        <createIndex indexName="IX_Users_Email" tableName="Users" unique="true">
+            <column name="Email"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="3" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_Users_ExternalId"/></not>
+        </preConditions>
+        <createIndex indexName="IX_Users_ExternalId" tableName="Users" unique="true">
+            <column name="ExternalId"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- Campaigns Table                                               -->
+    <!-- ============================================================ -->
+    <changeSet id="4" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="Campaigns"/></not>
+        </preConditions>
+        <createTable tableName="Campaigns">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="nvarchar(2000)"/>
+            <column name="Status" type="nvarchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartDate" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndDate" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Budget" type="decimal(18,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Impressions" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Reach" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ThumbnailUrl" type="nvarchar(2048)"/>
+            <column name="UserId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="Campaigns" baseColumnNames="UserId"
+            referencedTableName="Users" referencedColumnNames="Id"
+            constraintName="FK_Campaigns_Users_UserId"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="5" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_Campaigns_UserId"/></not>
+        </preConditions>
+        <createIndex indexName="IX_Campaigns_UserId" tableName="Campaigns">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="6" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_Campaigns_Status"/></not>
+        </preConditions>
+        <createIndex indexName="IX_Campaigns_Status" tableName="Campaigns">
+            <column name="Status"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- MediaAssets Table                                              -->
+    <!-- ============================================================ -->
+    <changeSet id="7" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="MediaAssets"/></not>
+        </preConditions>
+        <createTable tableName="MediaAssets">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="FileName" type="nvarchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FileUrl" type="nvarchar(2048)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FileType" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FileSize" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UploadedAt" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ThumbnailUrl" type="nvarchar(2048)"/>
+            <column name="CampaignId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="MediaAssets" baseColumnNames="CampaignId"
+            referencedTableName="Campaigns" referencedColumnNames="Id"
+            constraintName="FK_MediaAssets_Campaigns_CampaignId"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="8" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_MediaAssets_CampaignId"/></not>
+        </preConditions>
+        <createIndex indexName="IX_MediaAssets_CampaignId" tableName="MediaAssets">
+            <column name="CampaignId"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- ScreenDevices Table                                           -->
+    <!-- ============================================================ -->
+    <changeSet id="9" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="ScreenDevices"/></not>
+        </preConditions>
+        <createTable tableName="ScreenDevices">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VehiclePlate" type="nvarchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Latitude" type="float">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Longitude" type="float">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="nvarchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LastSeen" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FirmwareVersion" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_ScreenDevices_VehiclePlate"/></not>
+        </preConditions>
+        <createIndex indexName="IX_ScreenDevices_VehiclePlate" tableName="ScreenDevices">
+            <column name="VehiclePlate"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="11" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_ScreenDevices_Status"/></not>
+        </preConditions>
+        <createIndex indexName="IX_ScreenDevices_Status" tableName="ScreenDevices">
+            <column name="Status"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- CampaignRegions Table (Join: Campaign <-> RegionType)         -->
+    <!-- ============================================================ -->
+    <changeSet id="12" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="CampaignRegions"/></not>
+        </preConditions>
+        <createTable tableName="CampaignRegions">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="RegionType" type="nvarchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CampaignId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="CampaignRegions" baseColumnNames="CampaignId"
+            referencedTableName="Campaigns" referencedColumnNames="Id"
+            constraintName="FK_CampaignRegions_Campaigns_CampaignId"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="13" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_CampaignRegions_CampaignId_RegionType"/></not>
+        </preConditions>
+        <createIndex indexName="IX_CampaignRegions_CampaignId_RegionType" tableName="CampaignRegions" unique="true">
+            <column name="CampaignId"/>
+            <column name="RegionType"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- CampaignScreens Table (Join: Campaign <-> ScreenDevice)       -->
+    <!-- ============================================================ -->
+    <changeSet id="14" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="CampaignScreens"/></not>
+        </preConditions>
+        <createTable tableName="CampaignScreens">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CampaignId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ScreenDeviceId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="CampaignScreens" baseColumnNames="CampaignId"
+            referencedTableName="Campaigns" referencedColumnNames="Id"
+            constraintName="FK_CampaignScreens_Campaigns_CampaignId"
+            onDelete="CASCADE"/>
+        <addForeignKeyConstraint
+            baseTableName="CampaignScreens" baseColumnNames="ScreenDeviceId"
+            referencedTableName="ScreenDevices" referencedColumnNames="Id"
+            constraintName="FK_CampaignScreens_ScreenDevices_ScreenDeviceId"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="15" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_CampaignScreens_CampaignId_ScreenDeviceId"/></not>
+        </preConditions>
+        <createIndex indexName="IX_CampaignScreens_CampaignId_ScreenDeviceId" tableName="CampaignScreens" unique="true">
+            <column name="CampaignId"/>
+            <column name="ScreenDeviceId"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- Subscriptions Table                                           -->
+    <!-- ============================================================ -->
+    <changeSet id="16" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="Subscriptions"/></not>
+        </preConditions>
+        <createTable tableName="Subscriptions">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Tier" type="nvarchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="nvarchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartDate" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RenewalDate" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Price" type="decimal(18,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UserId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="Subscriptions" baseColumnNames="UserId"
+            referencedTableName="Users" referencedColumnNames="Id"
+            constraintName="FK_Subscriptions_Users_UserId"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="17" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_Subscriptions_UserId"/></not>
+        </preConditions>
+        <createIndex indexName="IX_Subscriptions_UserId" tableName="Subscriptions">
+            <column name="UserId"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- PaymentRecords Table                                          -->
+    <!-- ============================================================ -->
+    <changeSet id="18" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="PaymentRecords"/></not>
+        </preConditions>
+        <createTable tableName="PaymentRecords">
+            <column name="Id" type="uniqueidentifier" defaultValueComputed="NEWSEQUENTIALID()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Date" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Amount" type="decimal(18,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="nvarchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="nvarchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="InvoiceUrl" type="nvarchar(2048)"/>
+            <column name="SubscriptionId" type="uniqueidentifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UpdatedAt" type="datetime2" defaultValueComputed="GETUTCDATE()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="PaymentRecords" baseColumnNames="SubscriptionId"
+            referencedTableName="Subscriptions" referencedColumnNames="Id"
+            constraintName="FK_PaymentRecords_Subscriptions_SubscriptionId"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="19" author="adsrunner">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="IX_PaymentRecords_SubscriptionId"/></not>
+        </preConditions>
+        <createIndex indexName="IX_PaymentRecords_SubscriptionId" tableName="PaymentRecords">
+            <column name="SubscriptionId"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
